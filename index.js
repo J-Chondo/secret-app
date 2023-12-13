@@ -3,20 +3,25 @@ const axios = require("axios");
 
 const app = express();
 const port = process.env.PORT || 5000;
-const API_URL = "";
+
+app.set("view engine", "ejs");
+
 
 // serve the public folder as static files
 app.use(express.static("public"));
 
 // render the ejs file
 app.get ("/", async (req, res) => {
-    try {
-        const results = await axios.get("API_URL");
-        res.render("index.ejs", {
 
+    const API_URL = "https://secrets-api.appbrewery.com/random";
+    try {
+        const result = await axios.get(API_URL);
+        res.render("index.ejs", {
+          secret: result.data.secret,
+          user: result.data.username,
         });
     }catch (error) {
-        console.log(error.response.data);
+        console.log(error.message);
         res.status(500)
     }
 })
